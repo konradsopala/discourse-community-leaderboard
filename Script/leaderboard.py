@@ -11,7 +11,7 @@ import os
 # WEBHOOK_URL - Webhook URL for the Slack channel that you would like to post to
 # ENDPOINT - URL of the endpoint that you're hitting executing your Data Explorer query
 # API_KEY - Key that you can generate in API section in your Discourse Dashboard
-# ACCOUNT_SID - Parameter that you can grab by logging into your Twilio Console (https://www.twilio.com/console)
+# ACCOUNT_SID - Parameter that you can grab by logging into your Twilio Console (https://www.youtube.com/watch?v=knxlmCVFAZI)
 # AUTH_TOKEN - Authentication token that you can grab from Twilio Console as well
 # FROM_NUMBER - Your Twilio phone number that you will be sending the SMS from. Grab it from Twilio Console
 # TO_NUMBER - Phone number that you will be sending the SMS to
