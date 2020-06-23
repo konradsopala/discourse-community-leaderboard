@@ -74,7 +74,41 @@ post_to_slack(processed_leaderboard)
 send_leaderboard_via_sms_to_prize_sender(processed_leaderboard)
 ```
 
-Here are the steps to make everything work
+This method runs the Python script automatically provided that you scheduled that with cron (described below). Here are the steps to make the method work, assuming you have Python installed on your computer:
+
+* Create your Slack Workspace by going to https://slack.com/get-started#/create
+* Create a channel that you would like to send your stats to
+* Go to https://yourWorkspaceName.slack.com/apps/manage
+* In the search bar type in: Incoming WebHooks and click: Add Configuration
+* Follow the instructions and copy the Webhook URL given at the end
+* Download the [Python Script](https://github.com/konradsopala/discourse-community-leaderboard/blob/master/Script/leaderboard.py)
+* Follow the instructions described in script's comments
+
+To make it execute itself on the first day of each month at 12:00 automatically, go through following steps:
+
+* Open terminal (Mac / Linux)
+* Type in ```crontab -e```
+* Press ```i``` to enable insert mode in Vim
+* Copy and paste this snippet adjusting the path for where you downloaded your script:
+
+```
+0 12 1 * * cd <insert_script_folder_location_path> && python leaderboard.py
+
+```
+* Press esc and type ```:wq```
+
+If you want to schedule the execution of the script at different time, follow this cron scheduling mechanism:
+```
+# ┌───────────── minute (0 - 59)
+# │ ┌───────────── hour (0 - 23)
+# │ │ ┌───────────── day of month (1 - 31)
+# │ │ │ ┌───────────── month (1 - 12)
+# │ │ │ │ ┌───────────── day of week (0 - 6) (Sunday to Saturday;
+# │ │ │ │ │                                       7 is also Sunday on some systems)
+# │ │ │ │ │
+# │ │ │ │ │
+# * * * * *  command_to_execute
+```
 
 ![](/Assets/ScriptResults.png)
 
