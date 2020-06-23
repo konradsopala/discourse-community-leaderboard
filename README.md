@@ -84,9 +84,9 @@ Here are the steps to make everything work
 
 If you want to find out more about the stack used in those tools or even build your own tools, make sure to visit following links and get inspired:
 
-* [Cron]([https://en.wikipedia.org/wiki/Cron](https://en.wikipedia.org/wiki/Cron)) <br>
+* [Cron](https://en.wikipedia.org/wiki/Cron) <br>
 * [Twilio SMS](https://www.twilio.com/docs/sms/quickstart/python) <br>
-* [SendGrid Email]([https://sendgrid.com/docs/for-developers/sending-email/v3-python-code-example/](https://sendgrid.com/docs/for-developers/sending-email/v3-python-code-example/)) <br>
+* [SendGrid Email](https://sendgrid.com/docs/for-developers/sending-email/v3-python-code-example/) <br>
 * [Slack API](https://api.slack.com/) <br>
-* [Discourse Forums]([https://www.discourse.org/](https://www.discourse.org/)) <br>
+* [Discourse Forums](https://www.discourse.org/) <br>
 * [Data Explorer Plugin](https://meta.discourse.org/t/data-explorer-plugin/32566) <br>
