@@ -2,7 +2,7 @@
 
 ![](/Assets/DiscourseLeaderboardCover.png)
 
-<a href="https://www.discourse.org/"><img src="https://img.shields.io/badge/Discourse-Community-blueviolet" alt=""/></a>     <a href="https://www.discourse.org/plugins/data-explorer.html"><img src="https://img.shields.io/badge/Data-Explorer-blueviolet" alt=""/></a>   <a href="https://www.twilio.com/"><img src="https://img.shields.io/badge/Twilio-SMS-BLUEVIOLET" alt=""/></a>
+<a href="https://www.discourse.org/"><img src="https://img.shields.io/badge/Discourse-Community-blueviolet" alt=""/></a>     <a href="https://www.discourse.org/plugins/data-explorer.html"><img src="https://img.shields.io/badge/Data-Explorer-blueviolet" alt=""/></a>   <a href="https://www.twilio.com/"><img src="https://img.shields.io/badge/Twilio-SMS-BLUEVIOLET" alt=""/></a> <a href="https://sendgrid.com/"><img src="https://img.shields.io/badge/SendGrid-Email-BLUEVIOLET" alt=""/></a> <a href="https://en.wikipedia.org/wiki/Cron"><img src="https://img.shields.io/badge/Cron-Scheduler-blueviolet" alt=""/></a>
 
 Want to motivate your Discourse Community Top Contributors? They're performing exceptionally well by providing answers and solutions to others' question? Want to send them SWAG for that or any other kind of prize? Got you covered! At least on the technical side of things: fetching leaderboard, sending SMS summary to the SWAG sender in your company, posting top 3 contributors in Slack, notifying top contributors, . You just need to take care of the physical prize shipping!
 
