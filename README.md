@@ -32,7 +32,7 @@ client = Client(ACCOUNT_SID, AUTH_TOKEN)
 
 def fetch_leaderboard():
 
-		headers = {'Content-Type': 'multipart/form-data', 'Api-Key': API_KEY, 'Api-Username': API_USERNAME}
+    headers = {'Content-Type': 'multipart/form-data', 'Api-Key': API_KEY, 'Api-Username': API_USERNAME}
     request = requests.post(url = ENDPOINT, headers = headers)
 
     response = json.loads(request.text)
@@ -50,7 +50,7 @@ def fetch_leaderboard():
     'Email': response_rows[2][2],
     'Total_Points': response_rows[2][6]}
 
-		winners_names_emails = [(first_place['Email'], first_place['Name']), (second_place['Email'], second_place['Name']), (third_place['Email'], third_place['Name'])]
+    winners_names_emails = [(first_place['Email'], first_place['Name']), (second_place['Email'], second_place['Name']), (third_place['Email'], third_place['Name'])]
 
     response_text = "Community Leaderboard 🏆\n🥇 {} ({}) - {} pts\n🥈 {} ({}) - {} pts\n🥉 {} ({}) - {} pts".format(first_place['Name'], first_place['Email'], first_place['Total_Points'], second_place['Name'], second_place['Email'], second_place['Total_Points'], third_place['Name'], third_place['Email'], third_place['Total_Points'])
 
@@ -67,13 +67,13 @@ def send_leaderboard_via_sms_to_prize_sender(leaderboard):
         to = TO_NUMBER)
 
 def notify_top_contributors_via_email(leaderboard, winners_emails):
-		message = Mail(
-				from_email = ('konrad.sopala@auth0.com', 'Konrad Sopala'),
-				subject = 'Auth0 Community - Leaderboard 🏆',
-				html_content = '',
-				plain_text_content = 'Congrats for your efforts last month! We really appreciate it! You have been one of Top 3 performers in our community forum. Someone from Auth0 will contact you shortly to send you some secret SWAG\n{}'.format(leaderboard),
-				to_emails = winners_emails,
-				is_multiple = True)
+    message = Mail(
+	from_email = ('konrad.sopala@auth0.com', 'Konrad Sopala'),
+	subject = 'Auth0 Community - Leaderboard 🏆',
+	html_content = '',
+	plain_text_content = 'Congrats for your efforts last month! We really appreciate it! You have been one of Top 3 performers in our community forum. Someone from Auth0 will contact you shortly to send you some secret SWAG\n{}'.format(leaderboard),
+	to_emails = winners_emails,
+	is_multiple = True)
 
 processed_leaderboard = fetch_leaderboard()
 post_to_slack(processed_leaderboard[0])
