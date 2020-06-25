@@ -28,17 +28,12 @@ Each of those steps will be automated, you just need to setup the script once.
 It was developed using Python, Twilio (SMS), SendGrid (Email), cron (Scheduling) . Full script code can be found [here](https://github.com/konradsopala/discourse-community-leaderboard/blob/master/Script/leaderboard.py). Simplified script code is shown below:
 
 ```
-from twilio.rest import Client
-import requests
-import json
-import os
-
 client = Client(ACCOUNT_SID, AUTH_TOKEN)
 
-def fetch_leaderboard(endpoint):
+def fetch_leaderboard():
 
-	headers = {'Content-Type': 'multipart/form-data', 'Api-Key': API_KEY, 'Api-Username': API_USERNAME}
-    request = requests.post(url=endpoint, headers=headers)
+		headers = {'Content-Type': 'multipart/form-data', 'Api-Key': API_KEY, 'Api-Username': API_USERNAME}
+    request = requests.post(url = ENDPOINT, headers = headers)
 
     response = json.loads(request.text)
     response_rows = response["rows"]
@@ -55,23 +50,35 @@ def fetch_leaderboard(endpoint):
     'Email': response_rows[2][2],
     'Total_Points': response_rows[2][6]}
 
+		winners_names_emails = [(first_place['Email'], first_place['Name']), (second_place['Email'], second_place['Name']), (third_place['Email'], third_place['Name'])]
+
     response_text = "Community Leaderboard 🏆\n🥇 {} ({}) - {} pts\n🥈 {} ({}) - {} pts\n🥉 {} ({}) - {} pts".format(first_place['Name'], first_place['Email'], first_place['Total_Points'], second_place['Name'], second_place['Email'], second_place['Total_Points'], third_place['Name'], third_place['Email'], third_place['Total_Points'])
 
-    return response_text
+    return response_text, winners_names_emails
 
-def post_to_slack(processed_response):
-    slack_message = {'text': processed_response}
+def post_to_slack(leaderboard):
+    slack_message = {'text': leaderboard}
     requests.post(WEBHOOK_URL, json.dumps(slack_message))
 
-def send_leaderboard_via_sms_to_prize_sender(processed_leadearboard):
+def send_leaderboard_via_sms_to_prize_sender(leaderboard):
     message = client.messages.create(
-        body = processed_leadearboard,
+        body = leaderboard,
         from_= FROM_NUMBER,
         to = TO_NUMBER)
 
-processed_leaderboard = fetch_leaderboard(ENDPOINT)
-post_to_slack(processed_leaderboard)
-send_leaderboard_via_sms_to_prize_sender(processed_leaderboard)
+def notify_top_contributors_via_email(leaderboard, winners_emails):
+		message = Mail(
+				from_email = ('konrad.sopala@auth0.com', 'Konrad Sopala'),
+				subject = 'Auth0 Community - Leaderboard 🏆',
+				html_content = '',
+				plain_text_content = 'Congrats for your efforts last month! We really appreciate it! You have been one of Top 3 performers in our community forum. Someone from Auth0 will contact you shortly to send you some secret SWAG\n{}'.format(leaderboard),
+				to_emails = winners_emails,
+				is_multiple = True)
+
+processed_leaderboard = fetch_leaderboard()
+post_to_slack(processed_leaderboard[0])
+send_leaderboard_via_sms_to_prize_sender(processed_leaderboard[0])
+notify_top_contributors_via_email(processed_leaderboard[0], processed_leaderboard[1])
 ```
 
 This method runs the Python script automatically provided that you scheduled that with cron (described below). Here are the steps to make the method work, assuming you have Python installed on your computer:

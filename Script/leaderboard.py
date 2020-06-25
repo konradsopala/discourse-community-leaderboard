@@ -1,11 +1,13 @@
 # Imports
 
 from twilio.rest import Client
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import *
 import requests
 import json
 import os
 
-# Globals
+# Global Setup
 
 # TODO: Store those values in environment variables to retrieve them later (https://www.youtube.com/watch?v=5iWhQWVXosU)
 # WEBHOOK_URL - Webhook URL for the Slack channel that you would like to post to
@@ -15,6 +17,7 @@ import os
 # AUTH_TOKEN - Authentication token that you can grab from Twilio Console as well
 # FROM_NUMBER - Your Twilio phone number that you will be sending the SMS from. Grab it from Twilio Console
 # TO_NUMBER - Phone number that you will be sending the SMS to
+# SENDGRID_KEY - Your API KEY that you can use to develop solutions using SendGrid services (https://www.youtube.com/watch?v=xCCYmOeubRE&t=19s)
 # API_USERNAME - Put system if yoy created the API Key for all users otherwise put in your Discourse username
 
 WEBHOOK_URL = os.environ['LEADERBOARD_WEBHOOK_URL']
@@ -24,18 +27,17 @@ ACCOUNT_SID = os.environ['TWILIO_ACCOUNT_SID']
 AUTH_TOKEN = os.environ['TWILIO_AUTH_TOKEN']
 FROM_NUMBER = os.environ['TWILIO_LEADERBOARD_FROM_NUMBER']
 TO_NUMBER = os.environ['TWILIO_LEADERBOARD_TO_NUMBER']
+SENDGRID_KEY = os.environ['SENDGRID_KEY']
 API_USERNAME = 'system'
 
-client = Client(ACCOUNT_SID, AUTH_TOKEN)
+twilio_client = Client(ACCOUNT_SID, AUTH_TOKEN)
 
 # Core Functions
 
-def fetch_leaderboard(endpoint):
-
-    # There is no error handling here in terms of request. If the API changes anytime in the future, adjust the code based on request status code
+def fetch_leaderboard():
 
     headers = {'Content-Type': 'multipart/form-data', 'Api-Key': API_KEY, 'Api-Username': API_USERNAME}
-    request = requests.post(url=endpoint, headers=headers)
+    request = requests.post(url = ENDPOINT, headers = headers)
     print("Request Status Code: {}".format(request.status_code))
 
     # Unprocessed API request response
@@ -59,6 +61,9 @@ def fetch_leaderboard(endpoint):
                    'Email': response_rows[2][2],
                    'Total_Points': response_rows[2][6]}
 
+    winners_names_emails = [(first_place['Email'], first_place['Name']), (second_place['Email'], second_place['Name']),
+                            (third_place['Email'], third_place['Name'])]
+
     response_text = "Community Leaderboard 🏆\n🥇 {} ({}) - {} pts\n🥈 {} ({}) - {} pts\n🥉 {} ({}) - {} pts".format(first_place['Name'], first_place['Email'], first_place['Total_Points'], second_place['Name'], second_place['Email'], second_place['Total_Points'], third_place['Name'], third_place['Email'], third_place['Total_Points'])
 
     # Output Form
@@ -67,18 +72,45 @@ def fetch_leaderboard(endpoint):
     # 🥈 Caroline Doe (caroline@yahoo.com) - 34 pts
     # 🥉 John Keller (johnkeller@gmail.com) - 12 pts
 
-    return response_text
+    return response_text, winners_names_emails
 
-def post_to_slack(processed_response):
-    slack_message = {'text': processed_response}
+def post_to_slack(leaderboard):
+    slack_message = {'text': leaderboard}
     requests.post(WEBHOOK_URL, json.dumps(slack_message))
 
-def send_leaderboard_via_sms_to_prize_sender(processed_leadearboard):
-    message = client.messages.create(
-        body = processed_leadearboard,
+def send_leaderboard_via_sms_to_prize_sender(leaderboard):
+    message = twilio_client.messages.create(
+        body = leaderboard,
         from_= FROM_NUMBER,
         to = TO_NUMBER)
 
-processed_leaderboard = fetch_leaderboard(ENDPOINT)
-post_to_slack(processed_leaderboard)
-send_leaderboard_via_sms_to_prize_sender(processed_leaderboard)
+def notify_top_contributors_via_email(leaderboard, winners_emails):
+
+    # Whether if you want to hide your from email or not you can also store it in environment variables
+    # TODO: Fill in from_email and adjust subject + html_content / plain_content based on your needs
+
+    message = Mail(
+        from_email = ('konrad.sopala@auth0.com', 'Konrad Sopala'),
+        subject = 'Auth0 Community - Leaderboard 🏆',
+        html_content = '',
+        plain_text_content = 'Congrats for your efforts last month! We really appreciate it! You have been one of Top 3 performers in our community forum. Someone from Auth0 will contact you shortly to send you some secret SWAG\n{}'.format(leaderboard),
+        to_emails = winners_emails,
+        is_multiple = True)
+
+    # Email Form
+    # Congrats for your efforts last month! We really appreciate it! You have been one of Top 3 performers in our community forum.
+    # Someone from Auth0 will contact you shortly to send you some secret SWAG!
+    # Community Leaderboard 🏆
+    # 🥇 John Doe (john.doe@gmail.com) - 51 pts
+    # 🥈 Caroline Doe (caroline@yahoo.com) - 34 pts
+    # 🥉 John Keller (johnkeller@gmail.com) - 12 pts
+
+    sendgrid_client = SendGridAPIClient(SENDGRID_KEY)
+    response = sendgrid_client.send(message)
+    print(response.status_code)
+
+
+processed_leaderboard = fetch_leaderboard()
+post_to_slack(processed_leaderboard[0])
+send_leaderboard_via_sms_to_prize_sender(processed_leaderboard[0])
+notify_top_contributors_via_email(processed_leaderboard[0], processed_leaderboard[1])
