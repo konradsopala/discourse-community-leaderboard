@@ -119,7 +119,7 @@ If you want to schedule the execution of the script at different time, follow th
 
 ![](/Assets/ScriptResults.png)
 
-**Your post on Slack, SMS and EMAIL should be all there on the first day of each month at 12:00 your machine team! Congrats! 🎉**
+**Your post on Slack, SMS and EMAIL should be all there on the first day of each month at 12:00 your machine time! Congrats! 🎉**
 
 ### Supporting documentation
 
