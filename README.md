@@ -23,6 +23,18 @@ Each of those steps will be automated, you just need to setup the script once.
 
 **Saving time one query / SMS / email at a time!**
 
+### The Leaderboard
+
+The leaderboard SQL query was developed based on point system. Number of replies, solutions provided and likes received are taken into account. Here's how the point system works:
+
+* Each **solution** provided - 3 points
+* Each **reply** given - 2 points
+* Each **like** received - 1 point
+
+All that sums up and we have total points. Here's how example leaderboard look like:
+
+![](/Assets/LeaderboardScreenshot.png)
+
 ### The Script
 
 It was developed using Python, Twilio (SMS), SendGrid (Email), cron (Scheduling) . Full script code can be found [here](https://github.com/konradsopala/discourse-community-leaderboard/blob/master/Script/leaderboard.py). Simplified script code is shown below:
